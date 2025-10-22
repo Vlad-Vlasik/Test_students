@@ -3,6 +3,10 @@
 session_start();
 header('Content-Type: application/json');
 
+// --- НАЛАШТУВАННЯ ---
+$VIOLATIONS_FILE = '../../data/violations.txt';
+// !!! Важливо: переконайтеся, що папка /data/ має права на запис !!!
+
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (empty($input) || !isset($input['test_id'], $input['student_name'], $input['event_type'])) {
@@ -11,23 +15,28 @@ if (empty($input) || !isset($input['test_id'], $input['student_name'], $input['e
     exit;
 }
 
+// --- 1. Формування лог-запису ---
+$logEntry = [
+    date('Y-m-d H:i:s'),
+    $input['test_id'],
+    $input['student_name'],
+    $input['class'] ?? 'N/A', 
+    $input['event_type'], // Тип порушення: Tab_Hidden, Test_Blocked_Perm, тощо
+    $input['violation_count'] ?? 0 
+];
+
+// --- 2. ЗБЕРЕЖЕННЯ ЛОГУ У ФАЙЛ violations.txt ---
+$csvLine = implode(';', $logEntry) . "\n";
+file_put_contents($VIOLATIONS_FILE, $csvLine, FILE_APPEND | LOCK_EX);
+
+// 3. Також можемо оновити лічильник у сесії (якщо потрібно для внутрішньої логіки)
 $testId = $input['test_id'];
 if (!isset($_SESSION['test_logs'][$testId])) {
     $_SESSION['test_logs'][$testId] = [];
 }
-
-$logEntry = [
-    'timestamp' => date('Y-m-d H:i:s'),
-    'test_id' => $testId,
-    'student_name' => $input['student_name'],
-    'class' => $input['class'] ?? 'N/A', 
-    'event_type' => $input['event_type'],
-    'violation_count' => $input['violation_count'] ?? 0 
-];
-
 $_SESSION['test_logs'][$testId][] = $logEntry;
 
-echo json_encode(['status' => 'logged', 'log_count' => count($_SESSION['test_logs'][$testId])]);
 
-// У реальному проєкті тут має бути запис у Базу Даних!
+// 4. Повернення успішної відповіді
+echo json_encode(['status' => 'logged']);
 ?>
