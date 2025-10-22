@@ -4,6 +4,12 @@ let studentData = {};
 let violationCount = 0;
 let isTestActive = false;
 
+// --- API ШЛЯХИ ---
+// !!! ВИПРАВЛЕНО: Додано префікс '/test_project' для роботи з локальною папкою Laragon/XAMPP !!!
+const API_START = '/test_project/backend/api/start_test.php';
+const API_LOG = '/test_project/backend/api/log_violation.php';
+const API_SUBMIT = '/test_project/backend/api/submit_test.php';
+
 // --- ЕЛЕМЕНТИ DOM ---
 const startBtn = document.getElementById('start-test-btn');
 const initialScreen = document.getElementById('initial-screen');
@@ -47,8 +53,8 @@ startBtn.addEventListener('click', async () => {
     initialScreen.innerHTML = '<h2>Завантаження Вашого Варіанту...</h2>';
 
     try {
-        // Запит на сервер для генерації унікального тесту
-        const response = await fetch('/backend/api/start_test.php', {
+        // !!! ВИКОРИСТАННЯ ВИПРАВЛЕНОГО ШЛЯХУ API_START !!!
+        const response = await fetch(API_START, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(studentData)
@@ -56,6 +62,7 @@ startBtn.addEventListener('click', async () => {
 
         if (!response.ok) {
              const errorText = await response.text();
+             // Оновлено повідомлення для відображення статусу
              throw new Error(`Помилка сервера при генерації тесту. Статус: ${response.status}. Деталі: ${errorText.substring(0, 100)}...`);
         }
 
@@ -189,7 +196,8 @@ function sendViolationToServer(reason) {
         violation_count: violationCount
     };
 
-    fetch('/backend/api/log_violation.php', {
+    // !!! ВИКОРИСТАННЯ ВИПРАВЛЕНОГО ШЛЯХУ API_LOG !!!
+    fetch(API_LOG, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(logData)
@@ -241,8 +249,8 @@ async function handleSubmit(event, forced = false) {
 
 
     try {
-        // Запит на сервер для оцінювання
-        const response = await fetch('/backend/api/submit_test.php', {
+        // !!! ВИКОРИСТАННЯ ВИПРАВЛЕНОГО ШЛЯХУ API_SUBMIT !!!
+        const response = await fetch(API_SUBMIT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(finalData)
