@@ -1,0 +1,5 @@
+# Вміст файлу .gitignore
+/backend/vendor/
+/composer.lock
+/node_modules/
+*.log

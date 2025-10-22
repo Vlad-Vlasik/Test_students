@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контрольоване Тестування</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <meta name="screen-orientation" content="portrait"> 
+</head>
+<body class="portrait-only">
+
+    <div class="container" id="initial-screen">
+        <h1>Вхід у Тест</h1>
+        
+        <div class="input-group">
+            <label for="student-name">Ім'я та Прізвище:</label>
+            <input type="text" id="student-name" placeholder="Іван Іванов" required>
+        </div>
+        <div class="input-group">
+            <label for="student-class">Клас/Група:</label>
+            <input type="text" id="student-class" placeholder="10-А" required>
+        </div>
+        
+        <button id="start-test-btn">Почати Тест</button>
+        <p id="error-message" style="color: red; margin-top: 10px;"></p>
+    </div>
+
+    <div class="container hidden-screen" id="test-content">
+        </div>
+
+    <div id="blocker-screen" class="hidden-screen">
+        <h1>УВАГА! ПОРУШЕННЯ ФОКУСУ</h1>
+        <p id="blocker-message"></p>
+    </div>
+
+    <div id="result-modal" class="hidden-screen">
+        <div class="modal-content">
+            <h2 id="modal-title">Результати</h2>
+            <p>Студент: <strong id="modal-student-name"></strong></p>
+            <p>Оцінка (12-б): <strong id="modal-score">...</strong></p>
+            <p>Правильних відповідей: <strong id="modal-correct-count">...</strong></p>
+            <p>Порушення фокусу: <strong id="modal-violations"></strong></p>
+            <p id="modal-message"></p>
+            <button id="close-modal-btn">Закрити</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
